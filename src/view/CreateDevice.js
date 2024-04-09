@@ -1,194 +1,164 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   View,
   TextInput,
-  Button,
-  Text,
-  Alert,
-  Image,
-  ScrollView,
-  SafeAreaView,
-  StyleSheet,
   TouchableOpacity,
+  Text,
+  StyleSheet,
 } from 'react-native';
-import ImagePicker from 'react-native-image-crop-picker';
-import axios from 'axios';
-import {useNavigation} from '@react-navigation/native';
+import DeviceFormViewModel from '../viewModel/CreateDeviceViewModel';
+import RNPickerSelect from 'react-native-picker-select';
+import ImagePickerButton from '../components/ImagePicker';
 
-const CreateDevice = () => {
-  const navigation = useNavigation();
-  const [formData, setFormData] = useState({
-    device_status_id: '',
-    evice_company_id: '',
-    device_category_id: '',
-    device_model: '',
-    img: null,
-    price: '',
-    memory: '',
-    color: '',
-  });
+const DeviceForm = () => {
+  const viewModel = new DeviceFormViewModel();
 
-  const handleImagePicker = async () => {
-    try {
-      const image = await ImagePicker.openPicker({
-        width: 300,
-        height: 400,
-        cropping: true,
+  const handleSubmit = () => {
+    viewModel
+      .postForm()
+      .then(response => {
+        if (response.status === 200) {
+          console.log('Successfully created');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
       });
-      setFormData({...formData, img: image.path});
-    } catch (error) {
-      console.log('ImagePicker Error: ', error);
-    }
-  };
-
-  const handleFormSubmit = async () => {
-    try {
-      const formDataToSend = new FormData();
-      formDataToSend.append('device_status_id', formData.device_status_id);
-      formDataToSend.append('device_company_id', formData.evice_company_id);
-      formDataToSend.append('device_category_id', formData.device_category_id);
-      formDataToSend.append('device_model', formData.device_model);
-      formDataToSend.append('price', formData.price);
-      formDataToSend.append('memory', formData.memory);
-      formDataToSend.append('color', formData.color);
-      formDataToSend.append('img', {
-        uri: formData.img,
-      });
-
-      const response = await fetch('http://115.186.185.238:5401/api/device/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        body: formDataToSend,
-      });
-
-      const responseData = await response.json();
-
-      if (responseData.resultCode === 200) {
-        Alert.alert('Success', responseData.message);
-      } else {
-        Alert.alert('Error', responseData.message);
-      }
-    } catch (error) {
-      Alert.alert('Error', 'An error occurred while submitting the form.');
-      console.error('Form Submission Error: ', error);
-    }
   };
 
   return (
-    <SafeAreaView style={style.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{marginTop: 10}}>
-          <View>
-            <TouchableOpacity style={style.image} onPress={handleImagePicker}>
-              {formData.img ? (
-                <Image
-                  source={{uri: formData.img}}
-                  style={{width: 110, height: 110, borderRadius:60}}
-                />
-              ) : (
-                <Image
-                  style={{width: 110, height: 110, borderRadius:60}}
-                  source={require('../assets/image.png')}
-                />
-              )}
-            </TouchableOpacity>
-          </View>
-          <TextInput
-            style={style.textInput}
-            placeholder="Device Status ID"
-            placeholderTextColor='grey'
-            onChangeText={value =>
-              setFormData({...formData, device_status_id: value})
-            }
-          />
-          <TextInput
-            style={style.textInput}
-            placeholder="Device Company ID"
-            placeholderTextColor='grey'
-            onChangeText={value =>
-              setFormData({...formData, evice_company_id: value})
-            }
-          />
-          <TextInput
-            style={style.textInput}
-            placeholder="Device Category ID"
-            placeholderTextColor='grey'
-            onChangeText={value =>
-              setFormData({...formData, device_category_id: value})
-            }
-          />
-          <TextInput
-            style={style.textInput}
-            placeholder="Device Model"
-            placeholderTextColor='grey'
-            onChangeText={value =>
-              setFormData({...formData, device_model: value})
-            }
-          />
-          <TextInput
-            style={style.textInput}
-            placeholder="Price"
-            placeholderTextColor='grey'
-            onChangeText={value => setFormData({...formData, price: value})}
-          />
-          <TextInput
-            style={style.textInput}
-            placeholder="Memory"
-            placeholderTextColor='grey'
-            onChangeText={value => setFormData({...formData, memory: value})}
-          />
-          <TextInput
-            style={style.textInput}
-            placeholder="Color"
-            placeholderTextColor='grey'
-            onChangeText={value => setFormData({...formData, color: value})}
-          />
+    <View>
+      <ImagePickerButton
+        imageUri={viewModel.formData.img}
+        onChangeImage={viewModel.handleChange.bind(viewModel)}
+      />
 
-          <TouchableOpacity style={style.createBtn} onPress={handleFormSubmit}>
-            <Text style={style.createBtnText}>Create Device</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+      <RNPickerSelect
+        placeholder={{
+          label: 'Select Status',
+          value: null,
+        }}
+        onValueChange={value =>
+          viewModel.handleChange(value, 'device_status_id')
+        }
+        items={[
+          {label: 'Created', value: 'created'},
+          {label: 'Draft', value: 'draft'},
+          {label: 'Approved', value: 'approved'},
+        ]}
+        style={pickerSelectStyles}
+      />
+
+      <RNPickerSelect
+        placeholder={{
+          label: 'Select Company',
+          value: null,
+        }}
+        onValueChange={value =>
+          viewModel.handleChange(value, 'device_company_id')
+        }
+        items={[
+          {label: 'Oppo', value: 'oppo'},
+          {label: 'Samsung', value: 'samsung'},
+          {label: 'Tecno', value: 'tecno'},
+        ]}
+        style={pickerSelectStyles}
+      />
+
+      <RNPickerSelect
+        placeholder={{
+          label: 'Select Category',
+          value: null,
+        }}
+        onValueChange={value =>
+          viewModel.handleChange(value, 'device_category_id')
+        }
+        items={[
+          {label: 'Mobile', value: 'mobile'},
+          {label: 'IOT Devices', value: 'iot_devices'},
+        ]}
+        style={pickerSelectStyles}
+      />
+
+      <TextInput
+        placeholder="Device Model"
+        onChangeText={text => viewModel.handleChange(text, 'device_model')}
+        style={style.textInput}
+      />
+
+      <TextInput
+        placeholder="Price"
+        onChangeText={text => viewModel.handleChange(text, 'price')}
+        style={style.textInput}
+      />
+
+      <TextInput
+        placeholder="Memory"
+        onChangeText={text => viewModel.handleChange(text, 'memory')}
+        style={style.textInput}
+      />
+
+      <TextInput
+        placeholder="Color"
+        onChangeText={text => viewModel.handleChange(text, 'color')}
+        style={style.textInput}
+      />
+
+      <TouchableOpacity style={style.btn} onPress={handleSubmit}>
+        <Text style={style.btnText}>Create Device</Text>
+      </TouchableOpacity>
+    </View>
   );
 };
+
 const style = StyleSheet.create({
-  container: {
-    backgroundColor: '#F9FBFF',
-    padding: 5,
-    flex: 1,
-  },
-  image: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'center',
-  },
-  createBtn: {
-    backgroundColor: '#ACD7FF',
-    height: 50,
-    width: '100%',
-    justifyContent: 'center',
-    borderRadius: 5,
-    alignItems: 'center',
-    alignSelf: 'center',
-    elevation: 2,
-    marginTop: 10,
-    marginBottom: 10,
-  },
   textInput: {
+    width: '90%',
     borderWidth: 1,
-    marginTop: 5,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignSelf: 'center',
+    marginTop: 10,
     paddingLeft: 10,
-    borderRadius: 5,
-    color:'black'
   },
-  createBtnText: {
-    color: 'black',
-    letterSpacing:2,
-    fontSize: 16,
-    fontWeight: '800',
+  btn: {
+    justifyContent: 'center',
+    alignSelf: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+    backgroundColor: '#ACD7FF',
+    width: '90%',
+    height: 50,
+    borderRadius: 10,
   },
+  btnText:{
+    color:'black', fontSize:16, fontWeight:'bold'
+  }
 });
-export default CreateDevice;
+const pickerSelectStyles = {
+  inputIOS: {
+    fontSize: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 4,
+    color: 'black',
+    paddingRight: 30,
+  },
+  inputAndroid: {
+    fontSize: 16,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderWidth: 0.5,
+    borderColor: 'gray',
+    borderRadius: 8,
+    color: 'black',
+    paddingRight: 30,
+  },
+  placeholder: {
+    color: 'black',
+  },
+};
+
+export default DeviceForm;

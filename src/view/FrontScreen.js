@@ -16,7 +16,6 @@ const FrontScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
-
         <View style={styles.headerContainer}>
           <Text style={styles.headerContainerText}>
             Hey, Yaseen👋{'\n'}
@@ -163,6 +162,7 @@ const FrontScreen = () => {
           </ScrollView>
         </View>
       </ScrollView>
+      
     </SafeAreaView>
   );
 };

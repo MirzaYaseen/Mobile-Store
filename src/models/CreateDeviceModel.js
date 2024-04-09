@@ -1,13 +1,14 @@
-class CreateDeviceModel {
-    constructor(deviceModel, deviceCompanyId, deviceCategoryId, deviceImg, price, color, memory) {
-      this.deviceModel = deviceModel;
-      this.deviceCompanyId = deviceCompanyId;
-      this.deviceCategoryId = deviceCategoryId;
-      this.deviceImg = deviceImg;
-      this.price = price;
-      this.color = color;
-      this.memory = memory;
-    }
+class DeviceFormDataModel {
+  constructor() {
+    this.device_status_id = '';
+    this.device_company_id = '';
+    this.device_category_id = '';
+    this.device_model = '';
+    this.img = null;
+    this.price = '';
+    this.memory = '';
+    this.color = '';
   }
-export default CreateDeviceModel;
-  
+}
+
+export default DeviceFormDataModel;

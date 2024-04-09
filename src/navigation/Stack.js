@@ -10,7 +10,7 @@ import BottomTab from '../navigation/BottomTab';
 import DeviceDetails from '../view/DeviceDetail';
 import FrontScreen from '../view/FrontScreen';
 import EditDevice from '../view/EditDevice';
-
+import DeviceCompanies from '../view/DeviceCompanies';
 const Stack = createStackNavigator();
 
 const StackNavigator = () => {
@@ -32,6 +32,11 @@ const StackNavigator = () => {
           name="CreateDevice"
           component={CreateDevice}
           options={{title: 'Create Device'}}
+        />
+         <Stack.Screen
+          name="DeviceCompanies"
+          component={DeviceCompanies}
+          options={{title: 'Company Devices'}}
         />
         <Stack.Screen
           name="CategoryList"

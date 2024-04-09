@@ -1,61 +1,37 @@
-import { useState } from 'react';
-import CreateDevice from '../view/CreateDevice';
+import DeviceFormDataModel from '../models/CreateDeviceModel';
+import axios from 'axios';
 
-const CreateDeviceScreen = () => {
-  const [deviceModel, setDeviceModel] = useState('');
-  const [deviceStatusId, setDeviceStatusId] = useState('');
-  const [deviceCompanyId, setDeviceCompanyId] = useState('');
-  const [deviceCategoryId, setDeviceCategoryId] = useState('');
-  const [img, setImg] = useState('');
-  const [price, setPrice] = useState('');
-  const [color, setColor] = useState('');
-  const [memory, setMemory] = useState('');
+class DeviceFormViewModel {
+  constructor() {
+    this.formData = new DeviceFormDataModel();
+  }
 
-  const addDevice = async () => {
-    try {
-      const response = await fetch('http://115.186.185.238:5401/api/device/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          device_model: deviceModel,
-          device_status_id: deviceStatusId,
-          device_company_id: eviceCompanyId,
-          device_category_id: deviceCategoryId,
-          img,
-          price,
-          color,
-          memory,
-        }),
-      });
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error('Error:', error);
-      throw new Error('Something went wrong. Please try again later.');
-    }
-  };
+  postForm() {
+    const { formData } = this;
+    const formdata = new FormData();
+    formdata.append('device_status_id', formData.device_status_id);
+    formdata.append('device_company_id', formData.device_company_id);
+    formdata.append('device_category_id', formData.device_category_id);
+    formdata.append('device_model', formData.device_model);
+    formdata.append('img', formData.img);
+    formdata.append('price', formData.price);
+    formdata.append('memory', formData.memory);
+    formdata.append('color', formData.color);
 
-  return {
-    deviceModel,
-    setDeviceModel,
-    deviceStatusId,
-    setDeviceStatusId,
-    deviceCompanyId,
-    setDeviceCompanyId,
-    deviceCategoryId,
-    setDeviceCategoryId,
-    img,
-    setImg,
-    price,
-    setPrice,
-    color,
-    setColor,
-    memory,
-    setMemory,
-    addDevice,
-  };
-};
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    };
 
-export default CreateDeviceScreen;
+    const url = 'http://115.186.185.238:5401/api/device/';
+
+    return axios.post(url, formdata, config);
+  }
+
+  handleChange(value, name) {
+    this.formData[name] = value;
+  }
+}
+
+export default DeviceFormViewModel;

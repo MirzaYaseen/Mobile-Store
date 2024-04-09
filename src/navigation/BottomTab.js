@@ -6,6 +6,8 @@ import CreateDevice from '../view/CreateDevice';
 import GetDeviceByID from '../view/DeviceCompanies';
 import StatusList from '../view/ListStatus';
 import FrontScreen from '../view/FrontScreen';
+import GetDeviceByID2 from "../view/GetDeviceByID";
+import CategoryList from '../view/ListCategory';
 
 const Tab = createBottomTabNavigator();
 
@@ -43,20 +45,26 @@ const CustomBottomTab = ({state, navigation}) => (
       let image = null;
       switch (route.name) {
         case 'MobilesScreen':
-          image = require('../assets/mobile.png');
+          image = require('../assets/home1.png');
           break;
         case 'CreateDevice':
-          image = require('../assets/mobilephone.png');
+          image = require('../assets/plus1.png');
           break;
         case 'MobileDevices':
-          image = require('../assets/category.png');
+          image = require('../assets/view.png');
           break;
+        case 'CategoryList':
+            image = require('../assets/category.png');
+            break;
         case 'StatusList':
           image = require('../assets/status.png');
           break;
         case 'GetDevice':
-          image = require('../assets/comapnies.png');
+          image = require('../assets/skyline.png');
           break;
+          case 'MyDevices':
+            image = require('../assets/mobile.png');
+            break;
         default:
           break;
       }
@@ -78,9 +86,12 @@ const BottomTab = () => {
     <Tab.Navigator tabBar={props => <CustomBottomTab {...props} />}>
       <Tab.Screen name="MobilesScreen" options={{title:"Mobiles", headerShown:false}} component={FrontScreen} />
       <Tab.Screen name="MobileDevices" options={{title:"Mobile Devices"}} component={DeviceListScreen} />
+      <Tab.Screen name="CategoryList" options={{title:"Device Categories"}} component={CategoryList} />
       <Tab.Screen name="CreateDevice"  options={{title:"Create New Device"}} component={CreateDevice} />
       <Tab.Screen name="StatusList"  options={{title:"Status List"}} component={StatusList} />
       <Tab.Screen name="GetDevice"  options={{title:"Device Companies"}} component={GetDeviceByID} />
+      <Tab.Screen name="MyDevices"  options={{title:"My Devices"}} component={GetDeviceByID2} />
+
     </Tab.Navigator>
   );
 };
@@ -88,7 +99,7 @@ const BottomTab = () => {
 const styles = StyleSheet.create({
   tabBarContainer: {
     flexDirection: 'row',
-    backgroundColor: 'white',
+    backgroundColor: '#F9FBFF',
     height: 50,
     marginLeft: 10,
     marginRight: 10,

@@ -1,34 +1,29 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, SafeAreaView} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
+import DeviceCompaniesViewModel from '../viewModel/DeviceCompanies';
 
 const DeviceCompanies = () => {
-  const [companies, setCompanies] = useState([]);
+  const [viewModel, setViewModel] = useState(new DeviceCompaniesViewModel());
 
   useEffect(() => {
-    fetch('http://115.186.185.238:5401/api/device/listCompany')
-      .then(response => response.json())
-      .then(data => {
-        const companyData = data.response[0];
-        setCompanies(companyData);
-      })
-      .catch(error => console.error('Error fetching data:', error));
+    async function fetchData() {
+      await viewModel.fetchCompanies();
+      setViewModel({ ...viewModel });
+    }
+    fetchData();
   }, []);
 
   return (
     <SafeAreaView style={styles.container}>
       <View>
-        {companies.map(company => (
+        {viewModel.companies.map(company => (
           <View key={company.device_company_id} style={styles.companyItem}>
-            <Text style={styles.companyName}>
-              {company.device_company_name}
-            </Text>
+            <Text style={styles.companyName}>{company.device_company_name}</Text>
             <Text style={styles.text}>ID: {company.device_company_id}</Text>
             <Text style={styles.text}>
               Description: {company.device_company_description || 'N/A'}
             </Text>
-            <Text style={styles.text}>
-              Category ID: {company.device_category_id}
-            </Text>
+            <Text style={styles.text}>Category ID: {company.device_category_id}</Text>
           </View>
         ))}
       </View>
@@ -41,12 +36,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: '#F9FBFF',
-  },
-  heading: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    textAlign: 'center',
   },
   companyItem: {
     marginBottom: 20,
