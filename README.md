@@ -1,3 +1,12 @@
+# App_View
+
+![image](https://github.com/MirzaYaseen/Mobile-Store/assets/85738256/ab953991-2744-47d3-aa15-f4f79c423c9e)
+
+![image](https://github.com/MirzaYaseen/Mobile-Store/assets/85738256/c9cfca67-5b04-49b3-85d3-c015e1ecccff)
+
+![image](https://github.com/MirzaYaseen/Mobile-Store/assets/85738256/43c2662e-7c0c-436e-9079-b9377eb16747)
+
+
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
 # Getting Started
